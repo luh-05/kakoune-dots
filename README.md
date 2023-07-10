@@ -19,7 +19,7 @@ configuration to help new users get started.
 3. clone this repo:
 
     ```sh
-    $ git clone https://git.sr.ht/~parasrah/minimal.kak "${XDG_CONFIG_HOME:-~/.config}/kak"
+    $ git clone https://git.sr.ht/~parasrah/minimal.kak "${XDG_CONFIG_HOME:-$HOME/.config}/kak"
     ```
 
 4. open kakoune:
