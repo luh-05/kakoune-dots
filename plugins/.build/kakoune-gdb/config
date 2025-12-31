@@ -1,0 +1,31 @@
+try %{ 
+
+    declare-user-mode gdb
+    map global user d ':enter-user-mode gdb<ret>' -docstring 'GDB user mode'
+    map global gdb r ':gdb-run<ret>' -docstring 'Start the program'
+    map global gdb s ':gdb-start<ret>' -docstring 'Start the program and pause right away'
+    map global gdb t ':gdb-step<ret>' -docstring 'Execute next line; step into'
+    map global gdb n ':gdb-next<ret>' -docstring 'Execute next line; step over'
+    map global gdb f ':gdb-finish<ret>' -docstring 'Execute until end of function; step out'
+    map global gdb c ':gdb-continue<ret>' -docstring 'Continue until next breakpoint'
+    map global gdb j ':gdb-jump-to-location<ret>' -docstring 'Jump to breakpoint location - if stopped'
+    map global gdb a ':gdb-set-breakpoint<ret>' -docstring 'Set a breakpoint at cursor location'
+    map global gdb d ':gdb-clear-breakpoint<ret>' -docstring 'Unset a breakpoint at cursor location'
+    map global gdb <space> ':gdb-toggle-breakpoint<ret>' -docstring 'Toggle breakpoint at cursor location'
+    map global gdb b ':gdb-backtrace<ret>' -docstring 'show the callstack scratch buffer'
+ } catch %{
+    echo -debug "Error while evaluating 'kakoune-gdb' configuration: %val{error}"
+
+    set-option -add current plug_conf_errors "Error while evaluating 'kakoune-gdb' configuration:"
+    set-option -add current plug_conf_errors %sh{ printf "\n    " }
+    set-option -add current plug_conf_errors %val{error}
+    set-option -add current plug_conf_errors %sh{ printf "\n\n" }
+
+    hook -once -group plug-conf-err global WinDisplay .* %{
+        info -style modal -title "plug.kak error" "%opt{plug_conf_errors}"
+        on-key %{
+            info -style modal
+            execute-keys -with-maps -with-hooks %val{key}
+        }
+    }
+}

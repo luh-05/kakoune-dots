@@ -1,0 +1,22 @@
+try %{ 
+
+    map global user <j> ': easy-motion-f<ret>'
+    map global user <k> ': easy-motion-k<ret>'
+    map global user <w> ': easy-motion-w<ret>'
+    map global user <b> ': easy-motion-b<ret>'
+ } catch %{
+    echo -debug "Error while evaluating 'kakoune-easymotion' configuration: %val{error}"
+
+    set-option -add current plug_conf_errors "Error while evaluating 'kakoune-easymotion' configuration:"
+    set-option -add current plug_conf_errors %sh{ printf "\n    " }
+    set-option -add current plug_conf_errors %val{error}
+    set-option -add current plug_conf_errors %sh{ printf "\n\n" }
+
+    hook -once -group plug-conf-err global WinDisplay .* %{
+        info -style modal -title "plug.kak error" "%opt{plug_conf_errors}"
+        on-key %{
+            info -style modal
+            execute-keys -with-maps -with-hooks %val{key}
+        }
+    }
+}
